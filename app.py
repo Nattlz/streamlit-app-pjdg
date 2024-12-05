@@ -25,20 +25,22 @@ if st.button("Procesar"):
                 st.warning(f"No se encontraron datos para '{nombre}'.")
             else:
                 st.success(f"Se encontraron {len(filtrado)} cursos para '{nombre}'.")
-                
+
                 # Mostrar los datos filtrados en la aplicación
                 st.dataframe(filtrado)
 
+                # Crear el nombre del archivo dinámicamente
+                nombre_archivo = f"{nombre.replace(' ', '_')}-Resultados.xlsx"
+
                 # Guardar los datos en un archivo Excel
-                output_path = "Resultados.xlsx"
-                filtrado.to_excel(output_path, index=False)
+                filtrado.to_excel(nombre_archivo, index=False)
 
                 # Botón para descargar el archivo Excel
-                with open(output_path, "rb") as file:
+                with open(nombre_archivo, "rb") as file:
                     st.download_button(
                         label="Descargar Resultados",
                         data=file,
-                        file_name="Resultados.xlsx",
+                        file_name=nombre_archivo,
                         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                     )
         except Exception as e:
