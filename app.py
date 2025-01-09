@@ -36,7 +36,7 @@ if st.button("Procesar"):
             elif opcion == "Buscar por Nombre del Curso":
                 filtrado = datos[datos['Unnamed: 2'].str.contains(criterio.lower(), na=False)][['Unnamed: 1', 'Unnamed: 3']].copy()
                 columna = "Nombre del Curso"
-                filtrado.columns = ['Personas', 'Link']
+                filtrado.columns = ['Nombres', 'Link']
 
             if filtrado.empty:
                 st.warning(f"No se encontraron resultados para '{criterio}' en {columna}.")
