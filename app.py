@@ -24,12 +24,16 @@ if st.button("Procesar"):
             # Leer el archivo Excel
             datos = pd.ExcelFile(uploaded_file).parse(0)
 
+            # Convertir las columnas relevantes a minúsculas para la búsqueda insensible a mayúsculas/minúsculas
+            datos['Unnamed: 1'] = datos['Unnamed: 1'].str.lower()
+            datos['Unnamed: 2'] = datos['Unnamed: 2'].str.lower()
+
             # Filtrar según la opción seleccionada
             if opcion == "Buscar por Nombre de Persona":
-                filtrado = datos[datos['Unnamed: 1'] == criterio][['Unnamed: 2', 'Unnamed: 3']].copy()
+                filtrado = datos[datos['Unnamed: 1'] == criterio.lower()][['Unnamed: 2', 'Unnamed: 3']].copy()
                 columna = "Nombre de Persona"
             elif opcion == "Buscar por Nombre del Curso":
-                filtrado = datos[datos['Unnamed: 2'].str.contains(criterio, na=False, case=False)][['Unnamed: 1', 'Unnamed: 3']].copy()
+                filtrado = datos[datos['Unnamed: 2'].str.contains(criterio.lower(), na=False)][['Unnamed: 1', 'Unnamed: 3']].copy()
                 columna = "Nombre del Curso"
 
             # Renombrar columnas para mayor claridad
