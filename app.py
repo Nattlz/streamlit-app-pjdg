@@ -24,20 +24,20 @@ if st.button("Procesar"):
             # Leer el archivo Excel
             datos = pd.ExcelFile(uploaded_file).parse(0)
 
-            # Crear una copia para manipular (sin afectar los datos originales)
+            # Crear una copia con columnas relevantes en minúsculas para búsqueda
             datos_copia = datos.copy()
             datos_copia['Unnamed: 1'] = datos_copia['Unnamed: 1'].str.lower()
             datos_copia['Unnamed: 2'] = datos_copia['Unnamed: 2'].str.lower()
 
             # Filtrar según la opción seleccionada
             if opcion == "Buscar por Nombre de Persona":
-                filtrado = datos_copia[datos_copia['Unnamed: 1'] == criterio.lower()]
-                resultados = filtrado[['Unnamed: 2', 'Unnamed: 3']]
+                indices_filtrados = datos_copia[datos_copia['Unnamed: 1'] == criterio.lower()].index
+                resultados = datos.loc[indices_filtrados, ['Unnamed: 2', 'Unnamed: 3']]
                 columna = "Nombre de Persona"
                 resultados.columns = ['Cursos', 'Link']
             elif opcion == "Buscar por Nombre del Curso":
-                filtrado = datos_copia[datos_copia['Unnamed: 2'].str.contains(criterio.lower(), na=False)]
-                resultados = filtrado[['Unnamed: 1', 'Unnamed: 3']]
+                indices_filtrados = datos_copia[datos_copia['Unnamed: 2'].str.contains(criterio.lower(), na=False)].index
+                resultados = datos.loc[indices_filtrados, ['Unnamed: 1', 'Unnamed: 3']]
                 columna = "Nombre del Curso"
                 resultados.columns = ['Personas', 'Link']
 
