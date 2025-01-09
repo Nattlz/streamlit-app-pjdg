@@ -24,33 +24,37 @@ if st.button("Procesar"):
             # Leer el archivo Excel
             datos = pd.ExcelFile(uploaded_file).parse(0)
 
-            # Convertir las columnas relevantes a minúsculas para la búsqueda insensible a mayúsculas/minúsculas
-            datos['Unnamed: 1'] = datos['Unnamed: 1'].str.lower()
-            datos['Unnamed: 2'] = datos['Unnamed: 2'].str.lower()
+            # Crear una copia para manipular (sin afectar los datos originales)
+            datos_copia = datos.copy()
+            datos_copia['Unnamed: 1'] = datos_copia['Unnamed: 1'].str.lower()
+            datos_copia['Unnamed: 2'] = datos_copia['Unnamed: 2'].str.lower()
 
             # Filtrar según la opción seleccionada
             if opcion == "Buscar por Nombre de Persona":
-                filtrado = datos[datos['Unnamed: 1'] == criterio.lower()][['Unnamed: 2', 'Unnamed: 3']].copy()
+                filtrado = datos_copia[datos_copia['Unnamed: 1'] == criterio.lower()]
+                resultados = filtrado[['Unnamed: 2', 'Unnamed: 3']]
                 columna = "Nombre de Persona"
-                filtrado.columns = ['Cursos', 'Link']
+                resultados.columns = ['Cursos', 'Link']
             elif opcion == "Buscar por Nombre del Curso":
-                filtrado = datos[datos['Unnamed: 2'].str.contains(criterio.lower(), na=False)][['Unnamed: 1', 'Unnamed: 3']].copy()
+                filtrado = datos_copia[datos_copia['Unnamed: 2'].str.contains(criterio.lower(), na=False)]
+                resultados = filtrado[['Unnamed: 1', 'Unnamed: 3']]
                 columna = "Nombre del Curso"
-                filtrado.columns = ['Nombres', 'Link']
+                resultados.columns = ['Personas', 'Link']
 
-            if filtrado.empty:
+            # Mostrar resultados sin modificar el formato original
+            if resultados.empty:
                 st.warning(f"No se encontraron resultados para '{criterio}' en {columna}.")
             else:
-                st.success(f"Se encontraron {len(filtrado)} resultados para '{criterio}' en {columna}.")
+                st.success(f"Se encontraron {len(resultados)} resultados para '{criterio}' en {columna}.")
 
                 # Mostrar los datos filtrados en la aplicación
-                st.dataframe(filtrado)
+                st.dataframe(resultados)
 
                 # Crear el nombre del archivo dinámicamente
                 nombre_archivo = f"{criterio.replace(' ', '_')}-Resultados.xlsx"
 
-                # Guardar los datos en un archivo Excel
-                filtrado.to_excel(nombre_archivo, index=False)
+                # Guardar los datos en un archivo Excel (sin alterar formato original)
+                resultados.to_excel(nombre_archivo, index=False)
 
                 # Botón para descargar el archivo Excel
                 with open(nombre_archivo, "rb") as file:
