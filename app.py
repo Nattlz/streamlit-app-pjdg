@@ -32,14 +32,10 @@ if st.button("Procesar"):
             if opcion == "Buscar por Nombre de Persona":
                 filtrado = datos[datos['Unnamed: 1'] == criterio.lower()][['Unnamed: 2', 'Unnamed: 3']].copy()
                 columna = "Nombre de Persona"
+                filtrado.columns = ['Cursos', 'Link']
             elif opcion == "Buscar por Nombre del Curso":
                 filtrado = datos[datos['Unnamed: 2'].str.contains(criterio.lower(), na=False)][['Unnamed: 1', 'Unnamed: 3']].copy()
                 columna = "Nombre del Curso"
-
-            # Renombrar columnas para mayor claridad
-            if opcion == "Buscar por Nombre de Persona":
-                filtrado.columns = ['Cursos', 'Link']
-            else:
                 filtrado.columns = ['Personas', 'Link']
 
             if filtrado.empty:
